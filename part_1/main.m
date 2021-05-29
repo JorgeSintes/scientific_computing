@@ -1,4 +1,4 @@
-%% Test Equation error measurements
+%% 1.3.Test Equation error measurements
 clc
 close all
 
@@ -64,11 +64,11 @@ set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), po
 print(gcf,'1_implicit_0_2','-dpdf','-r0')
 
 
-%% Evolution of the error vs. stepsize
+%% 1.4.Evolution of the error vs. stepsize
 clc
 close all
-tspan = [0 15];
-hs = 0.005:0.001:0.5;
+tspan = [0 20];
+hs = 0.001:0.005:0.5;
 
 e_ls_ex = zeros(1,size(hs,2));
 e_gs_ex = zeros(1,size(hs,2));
@@ -80,48 +80,96 @@ for h=hs
     i = i+1;
     [T,X,X_real,e_l,e_g] = EulerExplicit(@TestEquation, @Exponential, tspan, h, x0, args);
     [T1,X1,X_real1,e_l1,e_g1] = EulerImplicitTest(@Exponential, tspan, h, x0, lambda);
-    e_ls_ex(i) = sum(e_l);
-    e_gs_ex(i) = sum(e_g)/size(e_g,2);
-    e_ls_im(i) = sum(e_l1);
-    e_gs_im(i) = sum(e_g1)/size(e_g1,2);
+    
+    idx = find(abs(T-t_plot) == min(abs(T-t_plot)));
+    idx = idx(1);
+    e_ls_ex(i) = mean(e_l);
+    e_gs_ex(i) = mean(e_g);
+    
+    e_ls_im(i) = mean(e_l1);
+    e_gs_im(i) = mean(e_g1);
 end
 
 figure()
 plot(hs,e_ls_ex)
 hold on
 plot(hs,e_ls_im)
+plot(hs, 0.025*hs.^2,'LineStyle','--','Color','k')
 % ax = gca;
 % ax.ColorOrderIndex = 1;
-legend('explicit', 'implicit')
+xlabel('h')
+ylabel('local error')
+legend('explicit', 'implicit','O(h^2)','Location','NorthWest')
+
+set(gcf,'Units','Inches');
+pos = get(gcf,'Position');
+set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+print(gcf,'1_4_localerror','-dpdf','-r0')
 
 figure()
-plot(hs,e_gs_ex, '-.')
+plot(hs,e_gs_ex)
 hold on
 % ax.ColorOrderIndex = 2;
-plot(hs,e_gs_im, '-.')
-
+plot(hs,e_gs_im)
+plot(hs, 0.03*hs,'black','LineStyle','--','Color','k')
 xlabel('h')
-ylabel('error')
-legend('explicit', 'implicit')
+ylabel('global error')
+legend('explicit', 'implicit','O(h)','Location','NorthWest')
 
-%% Trial
+set(gcf,'Units','Inches');
+pos = get(gcf,'Position');
+set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+print(gcf,'1_5_globalerror','-dpdf','-r0')
+
+%% 1.5.Stability Explicit and Implicit
 clc
+clear
 close all
-h = hs(1);
-h = 0.00001;
 
-[T,X,X_real,e_l,e_g] = EulerExplicit(@TestEquation, @Exponential, tspan, h, x0, args);
-[T1,X1,X_real1,e_l1,e_g1] = EulerImplicitTest(@Exponential, tspan, h, x0, lambda);
+real = linspace(-4,1,1e3);
+img = linspace(-2,2,1e3);
+[X,Y] = meshgrid(real,img);
+
+Z = -sqrt((X+1).^2 + (Y).^2); 
 
 figure()
-plot(T,X)
+contourf(X,Y,Z,[-1 -1]);
+colormap winter
 hold on
-plot(T,X1)
-plot(T,X_real)
-legend('explicit', 'implicit', 'real')
-sum(e_l)
-sum(e_g)
-sum(e_l1)
-sum(e_g1)
-sum(X-X_real)
-sum(X1-X_real1)
+plot(-1, 0, ".k");
+plot(axis, axis.*0, "k");
+plot(axis.*0, axis, "k");
+xlim([-4 1]);
+ylim([-2 2]);
+xlabel('Re(h\lambda)')
+ylabel('Im(h\lambda)')
+
+set(gcf,'Units','Inches');
+pos = get(gcf,'Position');
+set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+print(gcf,'1_6_explicit','-dpdf','-r0')
+
+% Implicit
+f = @(z) 1./(1-z);
+real = linspace(-1,4,1e3);
+img = linspace(-2,2,1e3);
+[X,Y] = meshgrid(real,img);
+
+Z = -abs(f(X + Y*i)); 
+
+figure()
+contourf(X,Y,Z,[-1 -1]);
+colormap winter
+hold on
+plot(1, 0, ".k");
+plot(axis, axis.*0, "k");
+plot(axis.*0, axis, "k");
+xlim([-1 4]);
+ylim([-2 2]);
+xlabel('Re(h\lambda)')
+ylabel('Im(h\lambda)')
+
+set(gcf,'Units','Inches');
+pos = get(gcf,'Position');
+set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+print(gcf,'1_6_implicit','-dpdf','-r0')
