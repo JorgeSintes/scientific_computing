@@ -1,5 +1,5 @@
 function Tdot = CSTR_1D(t, T, F, params)
-
+% F to IS units
 F = F/60000;
 
 beta = params(1);

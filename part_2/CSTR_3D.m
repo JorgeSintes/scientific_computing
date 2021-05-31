@@ -1,5 +1,5 @@
 function xdot = CSTR_3D(t,x,F,params)
-
+% F to IS units
 F = F/60000;
 
 beta = params(1);
