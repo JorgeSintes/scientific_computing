@@ -1,4 +1,4 @@
-%% Explicit Fixed Van der Pol mu=1.5
+%% Implicit Fixed Van der Pol mu=2
 clc
 clear
 close all
@@ -15,9 +15,9 @@ for h=hs
     h_legend = [h_legend, 'h = '+string(h)];
 end
 
-x0 = [1;1];
+x0 = [0.5;0.5];
 tspan = [0 40];
-mu = 1.5;
+mu = 2;
 args = {mu};
 
 figure('Renderer', 'painters', 'Position', [10 10 1200 533])
@@ -25,7 +25,7 @@ figure('Renderer', 'painters', 'Position', [10 10 1200 533])
 count = 0;
 for h=hs
     count = count+1;
-    [T,X] = EulerExplicit_fixed(@VanderPol, tspan, h, x0, args);
+    [T,X] = EulerImplicit_fixed(@VanderPol_fJ, tspan, h, x0, args);
     
     subplot(2,2,1)
     if any(slashed_h == count)
@@ -65,9 +65,9 @@ end
 set(gcf,'Units','Inches');
 pos = get(gcf,'Position');
 set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
-print(gcf,'2_4_fixed_mu_1_5','-dpdf','-r0')
+print(gcf,'3_4_fixed_mu_2','-dpdf','-r0')
 
-%% Explicit Fixed Van der Pol mu=15
+%% Implicit Fixed Van der Pol mu=12
 clc
 clear
 close all
@@ -76,6 +76,7 @@ close all
 % TIME-STEP SELECTION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 hs = [0.01 0.005 0.001 0.0001];
+
 slashed_h = [4];
 
 
@@ -84,9 +85,9 @@ for h=hs
     h_legend = [h_legend, 'h = '+string(h)];
 end
 
-x0 = [1;1];
+x0 = [0.5;0.5];
 tspan = [0 100];
-mu = 15;
+mu = 12;
 args = {mu};
 
 figure('Renderer', 'painters', 'Position', [10 10 1200 533])
@@ -94,7 +95,7 @@ figure('Renderer', 'painters', 'Position', [10 10 1200 533])
 count = 0;
 for h=hs
     count = count+1;
-    [T,X] = EulerExplicit_fixed(@VanderPol, tspan, h, x0, args);
+    [T,X] = EulerImplicit_fixed(@VanderPol_fJ, tspan, h, x0, args);
     
     subplot(2,2,1)
     if any(slashed_h == count)
@@ -134,17 +135,17 @@ end
 set(gcf,'Units','Inches');
 pos = get(gcf,'Position');
 set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
-print(gcf,'2_4_fixed_mu_15','-dpdf','-r0')
+print(gcf,'3_4_fixed_mu_12','-dpdf','-r0')
 
-%% Explicit Adaptive Van der Pol mu=1.5
+%% Implicit Adaptive Van der Pol mu=2
 clc
 clear
 close all
 
 tspan = [0 40];
 h0 = 0.1;
-x0 = [1;1];
-mu = 1.5;
+x0 = [0.5;0.5];
+mu = 2;
 args = {mu};
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -169,7 +170,7 @@ for tol=tols
     abstol = tol;
     reltol = tol;
     
-    [T,X,r_out,h_out,info] = EulerExplicit_adaptive(@VanderPol, tspan, h0, x0, abstol, reltol, args);
+    [T,X,r_out,h_out,info] = EulerImplicit_adaptive(@VanderPol_fJ, tspan, h0, x0, abstol, reltol, args);
     infos(:,count) = info;
 
     subplot(3,2,1);
@@ -236,20 +237,20 @@ end
 set(gcf,'Units','Inches');
 pos = get(gcf,'Position');
 set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
-print(gcf,'2_4_adaptive_mu_1_5','-dpdf','-r0')
+print(gcf,'3_4_adaptive_mu_2','-dpdf','-r0')
 
 infos_csv = [tols;infos];
-csvwrite('2_4_vdp_mu_1_5.csv',infos_csv,0,1);
+csvwrite('3_4_vdp_mu_2.csv',infos_csv,0,1);
 
-%% Explicit Adaptive Van der Pol mu=15
+%% Implicit Adaptive Van der Pol mu=12
 clc
 clear
 close all
 
 tspan = [0 100];
 h0 = 0.1;
-x0 = [1;1];
-mu = 15;
+x0 = [0.5;0.5];
+mu = 12;
 args = {mu};
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -274,7 +275,7 @@ for tol=tols
     abstol = tol;
     reltol = tol;
     
-    [T,X,r_out,h_out,info] = EulerExplicit_adaptive(@VanderPol, tspan, h0, x0, abstol, reltol, args);
+    [T,X,r_out,h_out,info] = EulerImplicit_adaptive(@VanderPol_fJ, tspan, h0, x0, abstol, reltol, args);
     infos(:,count) = info;
 
     subplot(3,2,1);
@@ -338,12 +339,11 @@ for tol=tols
     ylim([0 1.2]);
 end
 
-
 set(gcf,'Units','Inches');
 pos = get(gcf,'Position');
 set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
-print(gcf,'2_4_adaptive_mu_15','-dpdf','-r0')
+print(gcf,'3_4_adaptive_mu_12','-dpdf','-r0')
 
 infos_csv = [tols;infos];
-csvwrite('2_4_vdp_mu_15.csv',infos_csv,0,1);
+csvwrite('3_4_vdp_mu_12.csv',infos_csv,0,1);
 

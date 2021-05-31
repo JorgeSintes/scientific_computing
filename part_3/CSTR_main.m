@@ -1,4 +1,4 @@
-%% CSTR 3D Explicit Euler First Trial
+%% CSTR 3D Implicit Euler First Trial
 clc
 clear
 close all
@@ -36,7 +36,7 @@ for i=1:size(Fs,2)
     tspan = tspans(i,:)*60;
     F = Fs(i);
     args = {F, [beta,k0,EaR,CAin,CBin,Tin,V]};
-    [T_local,X_local] = EulerExplicit_fixed(@CSTR_3D, tspan, h, x0, args);
+    [T_local,X_local] = EulerImplicit_fixed(@CSTR_3D_fJ, tspan, h, x0, args);
     
     T = [T, T_local(1:end-1)];
     X = [X, X_local(:,1:end-1)];
@@ -63,7 +63,7 @@ ylabel('F (mL/min)');
 set(gcf,'Units','Inches');
 pos = get(gcf,'Position');
 set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
-print(gcf,'2_5_3D_trial','-dpdf','-r0')
+print(gcf,'3_5_3D_trial','-dpdf','-r0')
 
 
 %% Flow plot
@@ -75,7 +75,7 @@ ylabel('F (mL/min)');
 set(gcf,'Units','Inches');
 pos = get(gcf,'Position');
 set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
-print(gcf,'2_5_flow','-dpdf','-r0')
+print(gcf,'3_5_flow','-dpdf','-r0')
 
 %% CSTR 1D Explicit Euler First Trial
 clc
@@ -116,7 +116,7 @@ for i=1:size(Fs,2)
     tspan = tspans(i,:)*60;
     F = Fs(i);
     args = {F, [beta,k0,EaR,CAin,CBin,Tin,V]};
-    [T_local,X_local] = EulerExplicit_fixed(@CSTR_1D, tspan, h, x0, args);
+    [T_local,X_local] = EulerImplicit_fixed(@CSTR_1D_fJ, tspan, h, x0, args);
     
     T = [T, T_local(1:end-1)];
     X = [X, X_local(:,1:end-1)];
@@ -141,7 +141,7 @@ ylabel('F (mL/min)');
 set(gcf,'Units','Inches');
 pos = get(gcf,'Position');
 set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
-print(gcf,'2_5_1D_trial','-dpdf','-r0')
+print(gcf,'3_5_1D_trial','-dpdf','-r0')
 
 %% Plot 3D against 1D
 figure()
@@ -165,7 +165,7 @@ ylim([0 5]);
 set(gcf,'Units','Inches');
 pos = get(gcf,'Position');
 set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
-print(gcf,'2_5_3D_vs_1D','-dpdf','-r0')
+print(gcf,'3_5_3D_vs_1D','-dpdf','-r0')
 
 %% CSTR 3D-1D explicit fixed for different timesteps
 clc
@@ -226,7 +226,7 @@ for h=hs*60
         tspan = tspans(i,:)*60;
         F = Fs(i);
         args = {F, [beta,k0,EaR,CAin,CBin,Tin,V]};
-        [T_local,X_local] = EulerExplicit_fixed(@CSTR_3D, tspan, h, x0, args);
+        [T_local,X_local] = EulerImplicit_fixed(@CSTR_3D_fJ, tspan, h, x0, args);
 
         T_3D = [T_3D, T_local(1:end-1)];
         X_3D = [X_3D, X_local(:,1:end-1)];
@@ -251,7 +251,7 @@ for h=hs*60
         tspan = tspans(i,:)*60;
         F = Fs(i);
         args = {F, [beta,k0,EaR,CAin,CBin,Tin,V]};
-        [T_local,X_local] = EulerExplicit_fixed(@CSTR_1D, tspan, h, x0, args);
+        [T_local,X_local] = EulerImplicit_fixed(@CSTR_1D_fJ, tspan, h, x0, args);
 
         T_1D = [T_1D, T_local(1:end-1)];
         X_1D = [X_1D, X_local(:,1:end-1)];
@@ -278,7 +278,7 @@ for h=hs*60
     set(gcf,'Units','Inches');
     pos = get(gcf,'Position');
     set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
-    print(gcf,'2_5_3D_hs','-dpdf','-r0')
+    print(gcf,'3_5_3D_hs','-dpdf','-r0')
     
     figure(2)
     if any(slashed_h == count)
@@ -295,7 +295,7 @@ for h=hs*60
     set(gcf,'Units','Inches');
     pos = get(gcf,'Position');
     set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
-    print(gcf,'2_5_1D_hs','-dpdf','-r0')
+    print(gcf,'3_5_1D_hs','-dpdf','-r0')
 
 end
 
@@ -330,9 +330,9 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % TOLERANCE SELECTION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-tols =  [5e-2, 5e-3, 1e-3, 1e-5];
+tols =  [2e-2 5e-3 1e-3 1e-5];
 slashed_tol = [4];
-lim1 = [0 100];
+lim1 = [0 120];
 lim2 = [-0.02 2.5];
 lim3 = [0 1.2];
 
@@ -372,7 +372,7 @@ for tol=tols
         tspan = tspans(i,:)*60;
         F = Fs(i);
         args = {F, [beta,k0,EaR,CAin,CBin,Tin,V]};
-        [T_local,X_local,r_local,h_local, info_local] = EulerExplicit_adaptive(@CSTR_3D,tspan,h0,x0,abstol,reltol,args);
+        [T_local,X_local,r_local,h_local, info_local] = EulerImplicit_adaptive(@CSTR_3D_fJ,tspan,h0,x0,abstol,reltol,args);
 
         T_3D = [T_3D, T_local(1:end-1)];
         X_3D = [X_3D, X_local(:,1:end-1)];
@@ -410,7 +410,7 @@ for tol=tols
         tspan = tspans(i,:)*60;
         F = Fs(i);
         args = {F, [beta,k0,EaR,CAin,CBin,Tin,V]};
-        [T_local,X_local,r_local,h_local, info_local] = EulerExplicit_adaptive(@CSTR_1D,tspan,h0,x0,abstol,reltol,args);
+        [T_local,X_local,r_local,h_local, info_local] = EulerImplicit_adaptive(@CSTR_1D_fJ,tspan,h0,x0,abstol,reltol,args);
 
         T_1D = [T_1D, T_local(1:end-1)];
         X_1D = [X_1D, X_local(:,1:end-1)];
@@ -474,7 +474,7 @@ for tol=tols
     set(gcf,'Units','Inches');
     pos = get(gcf,'Position');
     set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
-    print(gcf,'2_5_3D_tols','-dpdf','-r0')
+    print(gcf,'3_5_3D_tols','-dpdf','-r0')
   
     figure(2)
     subplot(3,1,1)
@@ -518,17 +518,17 @@ for tol=tols
     set(gcf,'Units','Inches');
     pos = get(gcf,'Position');
     set(gcf,'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
-    print(gcf,'2_5_1D_tols','-dpdf','-r0')
+    print(gcf,'3_5_1D_tols','-dpdf','-r0')
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % OUTPUT FILES
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     infos_3D_csv = [tols;infos_3D];
-    csvwrite('2_5_CSTR_3D.csv',infos_3D_csv,0,1);
+    csvwrite('3_5_CSTR_3D.csv',infos_3D_csv,0,1);
     
     infos_1D_csv = [tols;infos_1D];
-    csvwrite('2_5_CSTR_1D.csv',infos_1D_csv,0,1);
+    csvwrite('3_5_CSTR_1D.csv',infos_1D_csv,0,1);
     
 
 end
