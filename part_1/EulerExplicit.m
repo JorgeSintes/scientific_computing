@@ -14,7 +14,7 @@ X_real(:,1) = x0;
 for k = 1:N-1
     f = feval(fun, T(k), X(:,k), args{:});
     X(:,k+1) = X(:,k) + h * f;
-    X_real(:,k+1) = feval(anal_sol, T(k+1), X(:,1), T(1), args{:});
+    X_real(:,k+1) = feval(anal_sol, T(k+1), x0, t0, args{:});
     
     e_l(:,k+1) = abs(X(:,k+1) - feval(anal_sol, T(k+1), X(:,k), T(k), args{:}));
     e_g(:,k+1) = abs(X(:,k+1) - X_real(:,k+1));

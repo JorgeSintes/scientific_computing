@@ -81,8 +81,6 @@ for h=hs
     [T,X,X_real,e_l,e_g] = EulerExplicit(@TestEquation, @Exponential, tspan, h, x0, args);
     [T1,X1,X_real1,e_l1,e_g1] = EulerImplicitTest(@Exponential, tspan, h, x0, lambda);
     
-    idx = find(abs(T-t_plot) == min(abs(T-t_plot)));
-    idx = idx(1);
     e_ls_ex(i) = mean(e_l);
     e_gs_ex(i) = mean(e_g);
     
