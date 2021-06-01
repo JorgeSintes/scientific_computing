@@ -300,7 +300,7 @@ for h=hs*60
 end
 
 
-%% CSTR 3D implicit for different tolerances
+%% CSTR 3D-1D implicit for different tolerances
 clc
 clear
 close all
