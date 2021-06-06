@@ -1,0 +1,77 @@
+\documentclass{article}
+\input{zPackages}
+
+\makeatletter
+
+\usepackage{titlesec}
+\usepackage{titletoc}
+
+\titleformat{\section}
+{\normalfont\Large\bfseries}{Part~\thesection:}{0.5em}{}
+
+% \titlecontents*{section}[0pt]
+% {}{Part\space\thecontentslabel\space}{}
+% {,~\itshape\thecontentspage}[\space\textbullet\space][.]
+
+\titleformat{\subsection}
+{\normalfont \bfseries}{\thesubsection.}{0.5em}{}
+
+\newcommand{\rulesep}{\unskip \vrule height -1ex}
+\newcommand*\bigcdot{\mathpalette\bigcdot@{.5}}
+\newcommand*\bigcdot@[2]{\mathbin{\vcenter{\hbox{\scalebox{#2}{$\m@th#1\bullet$}}}}}
+
+\newcommand*\Bs{\ensuremath{\boldsymbol}}
+\makeatother
+
+\begin{document}
+
+\input{titlepage}
+
+\tableofcontents
+
+\pagebreak
+
+\listoffigures
+
+\pagebreak
+
+\listoftables
+
+\pagebreak
+
+\input{part1}
+\pagebreak
+
+\input{part2}
+\pagebreak
+
+\input{part3}
+\pagebreak
+
+\input{part4}
+\pagebreak
+
+\input{part5}
+\pagebreak
+
+\input{part6}
+\pagebreak
+
+\input{part7}
+\pagebreak
+
+\input{part8}
+\pagebreak
+
+\input{part9}
+\pagebreak
+
+\input{appendix}
+\printbibliography
+
+\pagebreak
+
+% \input{appendix}
+
+
+\end{document}

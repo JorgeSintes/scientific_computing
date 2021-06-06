@@ -181,7 +181,7 @@ for tol=tols
         hold on
     end
     legend(tols_legend,'Location','NorthWest');
-    ylabel('T(Â°C)');
+    ylabel('T(°C)');
     xlabel('t (min)');
     ylim(lim1)
     
@@ -225,7 +225,7 @@ for tol=tols
         hold on
     end
     legend(tols_legend,'Location','NorthWest');
-    ylabel('T(Â°C)');
+    ylabel('T(°C)');
     xlabel('t (min)');
     ylim(lim1)
     
