@@ -38,7 +38,14 @@ tols_legend = [];
 
 method = 'ESDIRK23';
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
 
+>>>>>>> 764c13c1ec0f1c512aaac0e25bef4318fea83cb3
+=======
+
+>>>>>>> 764c13c1ec0f1c512aaac0e25bef4318fea83cb3
 for tol=tols
     tols_legend = [tols_legend, 'tol = ' + string(tol)];
 end
@@ -174,7 +181,7 @@ for tol=tols
         hold on
     end
     legend(tols_legend,'Location','NorthWest');
-    ylabel('T(°C)');
+    ylabel('T(Â°C)');
     xlabel('t (min)');
     ylim(lim1)
     
@@ -218,7 +225,7 @@ for tol=tols
         hold on
     end
     legend(tols_legend,'Location','NorthWest');
-    ylabel('T(°C)');
+    ylabel('T(Â°C)');
     xlabel('t (min)');
     ylim(lim1)
     
