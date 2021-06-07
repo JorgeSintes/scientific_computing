@@ -1,4 +1,4 @@
-%% 1.3.Test Equation error measurements.
+%% 1.3.Test Equation error measurements
 clc
 close all
 
