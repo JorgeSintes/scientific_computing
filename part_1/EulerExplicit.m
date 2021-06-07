@@ -1,5 +1,5 @@
 function [T,X,X_real,e_l,e_g] = EulerExplicit(fun, anal_sol, tspan, h, x0, args)
-
+%nice try
 t0 = tspan(1);
 tf = tspan(end);
 T = t0:h:tf;
